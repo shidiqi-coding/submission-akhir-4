@@ -6,7 +6,8 @@ const noteSearchingElement =
   noteContainListElements.querySelector(".searching");
 const noteLoadingElement =
   noteContainListElements.querySelector(".search-loading");
-const noteListElements = noteContainListElements.querySelector("note-list");
+  const noteListElements = noteContainListElements.querySelector("#note-unarchive");
+// const noteListElements = noteContainListElements.querySelector("note-list");
 
 const noteArchivedListContainerElement =
   document.querySelector("#ArchivedList");
@@ -59,7 +60,7 @@ export const showNoteArchived = () => {
   notesAPI
     .getArchived()
     .then((results) => {
-      displayResults(results);
+      displayResults(results.data);
       showNoteList();
     })
     .catch((error) => {
@@ -121,17 +122,32 @@ const onUnarchiveNoteHandler = (event) => {
 };
 
 const displayResults = (notes) => {
-  const ListItemElements = notes.map((note) => {
-    const ListItemElements = document.createElement("list-item");
-    ListItemElements.note = note;
-    ListItemElements.addEventListener("deleteNotes", onDeleteNoteHandler);
+  
 
-    return ListItemElements;
-  });
+  notes.map((note) => {
+    noteListElements.innerHTML += `
+     <div class ="card-list">
+      <div id=${note.id}>
+        <p>${note.title}</p>
+        <p>${note.body}</p>
+        <button class = "del-btn"><i class="fa-solid fa-trash"></i>Hapus</button>
+        <button class = "arc-btn">Arsipkan</button>
+      </div>
+      </div>
+    `
+    })
+  }
+  // const ListItemElements = notes.map((note) => {
+  //   const ListItemElements = document.createElement("notes-item");
+  //   ListItemElements.note = note;
+  //   ListItemElements.addEventListener("deleteNotes", onDeleteNoteHandler);
 
-  Utils.emptyElement(noteListElements);
-  noteListElements.append(...ListItemElements);
-};
+  //   return ListItemElements;
+  // });
+
+  // Utils.emptyElement(noteListElements);
+  // noteListElements.append(...ListItemElements);
+
 
 const displayNotearchivedResult = (notearchived) => {
   const archivedItemElements = notearchived.map((notearchived) => {
@@ -151,9 +167,9 @@ const displayNotearchivedResult = (notearchived) => {
 
 const showNoteList = () => {
   Array.from(noteContainListElements.children).forEach((element) => {
-    Utils.hideElement(element);
+    Utils.showElement(element);
   });
-  Utils.showElement(noteListElements);
+  // Utils.showElement(noteListElements);
 };
 
 const showNotearchivedList = () => {
